@@ -14,8 +14,8 @@ jobs:
       - name: Set up Flutter
         run: |
           git init "$RUNNER_TEMP/flutter"
-          git -C "$RUNNER_TEMP/flutter" fetch --depth 1 https://github.com/flutter/flutter.git ab2912035e160d9cad6306df307576da6128ebdb
-          git -C "$RUNNER_TEMP/flutter" checkout FETCH_HEAD
+          git -C "$RUNNER_TEMP/flutter" fetch --depth 1 https://github.com/flutter/flutter.git refs/tags/3.50.0:refs/tags/3.50.0
+          git -C "$RUNNER_TEMP/flutter" checkout --detach 3.50.0
           echo "$RUNNER_TEMP/flutter/bin" >> "$GITHUB_PATH"
       - name: Build device IPA
         env:
