@@ -1,0 +1,29 @@
+name: Build AltStore IPA
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  ipa:
+    runs-on: macos-26
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - name: Set up Flutter
+        run: |
+          git init "$RUNNER_TEMP/flutter"
+          git -C "$RUNNER_TEMP/flutter" fetch --depth 1 https://github.com/flutter/flutter.git ab2912035e160d9cad6306df307576da6128ebdb
+          git -C "$RUNNER_TEMP/flutter" checkout FETCH_HEAD
+          echo "$RUNNER_TEMP/flutter/bin" >> "$GITHUB_PATH"
+      - name: Build device IPA
+        env:
+          SPOTIFY_CLIENT_ID: ${{ vars.SPOTIFY_CLIENT_ID }}
+          JAMENDO_CLIENT_ID: ${{ vars.JAMENDO_CLIENT_ID }}
+        run: bash ./build-altstore-ipa.sh
+      - uses: actions/upload-artifact@v4
+        with:
+          name: PlaylistOffline-IPA
+          path: build/PlaylistOffline.ipa
+          if-no-files-found: error
